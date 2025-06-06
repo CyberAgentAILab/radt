@@ -1,0 +1,67 @@
+task_name: ""
+
+# model parameters
+model_type: radt
+embed_dim: 128
+n_layer: 3
+n_head: 1
+activation_function: gelu
+dropout: 0.1
+remove_act_embs: False
+learning_rate: 1e-4
+weight_decay: 1e-4
+K: 20 # 20 for dt, radt, 8 for dc
+timestep_sampling: True
+
+dc:
+  conv_window_size: 6
+
+radt:
+  use_learnable_pos_emb: False
+  stepra: True
+  alpha_scale: True
+  seqra: True
+  action_tanh: True
+
+# training parameters
+seed: 0
+env: hopper
+dataset: medium # medium, medium-replay, medium-expert, expert
+mode: normal # normal for standard setting, delayed for sparse, no-reward-decay
+validation_mode: align # best, align
+device: cuda
+pct_traj: 1.
+batch_size: 64
+warmup_steps: 10000
+num_iterations: 100_000
+eval_every: 5000
+eval_targets: []
+num_eval_episodes: 10
+test_targets: []
+num_test_episodes: 100
+
+# evaluation parameters
+clip_action: False
+target_returns:
+  eval:
+  - 0
+  test:
+  - 0
+
+# logging settings
+paths:
+  root_dir: "."
+  data_dir: ${paths.root_dir}/data-gym/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+hydra:
+  run:
+    dir: ${paths.log_dir}/${env}-${dataset}/${task_name}_single-run/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  sweep:
+    dir: ${paths.log_dir}/${env}-${dataset}/${task_name}/
+    subdir: ${seed}
+  job_logging:
+    handlers:
+      file:
+        filename: ${hydra.runtime.output_dir}/run.log

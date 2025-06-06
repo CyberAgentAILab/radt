@@ -1,0 +1,17 @@
+# @package _global_
+
+game: Qbert
+
+target_returns:
+  eval:
+  - 100
+  - 200
+  - 300
+  test:
+  - 15
+  - 60
+  - 104
+  - 149
+  - 194
+  - 238
+  - 283

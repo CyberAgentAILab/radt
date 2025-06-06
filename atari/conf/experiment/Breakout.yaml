@@ -1,0 +1,17 @@
+# @package _global_
+
+game: Breakout
+
+target_returns:
+  eval:
+  - 10
+  - 40
+  - 70
+  test:
+  - 12
+  - 23
+  - 34
+  - 45
+  - 55
+  - 66
+  - 77

@@ -1,0 +1,52 @@
+game: Breakout
+seed: 123
+epochs: 15
+model_type: radt
+num_steps: 500000
+lr: 6e-4
+batch_size: 128
+rtg_scale: 1.0
+num_buffers: 50
+trajectories_per_buffer: 10
+data_dir_prefix: ./dqn_replay/
+num_eval_episodes: 10
+num_test_episodes: 10
+
+suffix: ""
+log_dir: ""
+add_id: False
+
+seq_len: 30
+n_layers: 6
+
+stepra: True
+alpha_scale: True
+seqra: True
+pe_sinusoid: False
+
+dc_proj: True
+radt_proj: True
+
+target_returns:
+  eval:
+  - 0
+  test:
+  - 0
+
+# logging settings
+paths:
+  root_dir: "."
+  data_dir: ${paths.root_dir}/data-gym/
+  log_dir: ${paths.root_dir}/logs/
+  output_dir: ${hydra:runtime.output_dir}
+  work_dir: ${hydra:runtime.cwd}
+hydra:
+  run:
+    dir: ${paths.log_dir}/${game}/${suffix}_single-run/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  sweep:
+    dir: ${paths.log_dir}/${game}/${suffix}/
+    subdir: ${seed}
+  job_logging:
+    handlers:
+      file:
+        filename: ${hydra.runtime.output_dir}/run.log
